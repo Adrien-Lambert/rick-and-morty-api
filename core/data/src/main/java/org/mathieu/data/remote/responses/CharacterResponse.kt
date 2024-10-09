@@ -17,6 +17,7 @@ import kotlinx.serialization.Serializable
  * @property episode A list of episodes in which the character has appeared.
  * @property url The unique URL endpoint specifically for this character.
  * @property created The timestamp indicating when the character was added to the database.
+ * @property locationPreviews The different locations where the character has been.
  */
 @Serializable
 internal data class CharacterResponse(
@@ -32,6 +33,7 @@ internal data class CharacterResponse(
     val episode: List<String>,
     val url: String,
     val created: String,
+    val locationPreviews: List<LocationPreviewResponse> = emptyList()
 )
 
 @Serializable
