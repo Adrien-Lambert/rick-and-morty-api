@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -140,7 +141,9 @@ private fun CharacterDetailsContent(
                 }
 
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     SubcomposeAsyncImage(
@@ -155,6 +158,19 @@ private fun CharacterDetailsContent(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(text = state.name)
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    if (state.location != null){
+                        LocationInfoCard(
+                            location = state.location,
+                            onLocationClick = { selectedLocation ->
+                                //TODO: React to click : navigate
+                            }
+                        )
+                    }
+
+
                 }
 
 
