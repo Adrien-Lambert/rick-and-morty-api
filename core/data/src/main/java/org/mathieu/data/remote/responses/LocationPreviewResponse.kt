@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  * @property dimension The specific dimension or universe where this location exists.
  */
 @Serializable
-data class LocationPreviewResponse(
+internal data class LocationPreviewResponse(
     val id: Int,
     val name: String,
     val type: String,
