@@ -93,7 +93,7 @@ fun triggerVibration(context: Context) {
 
     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     if (vibrator.hasVibrator()) {
-        val vibrationEffect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE) // Vibre pendant 200 ms
+        val vibrationEffect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE) // Vibrate for 200 ms
         vibrator.vibrate(vibrationEffect)
     }
 }
