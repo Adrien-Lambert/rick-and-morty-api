@@ -1,12 +1,8 @@
-package org.mathieu.characters.details
+package org.mathieu.ui.composables
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Context.VIBRATOR_SERVICE
-import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.os.VibratorManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,20 +15,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.getSystemService
-import org.mathieu.domain.models.location.Location
+import org.mathieu.domain.models.location.LocationPreview
 
 /**
  * A card composable where we can display data of a specific location.
  * This card is also clickable, triggering a callback when the user taps on it.
  *
- * @param location The [Location] object representing the details of the location to be displayed.
- * @param onLocationClick A callback function that gets triggered when the card is clicked. It provides the clicked [Location] as a parameter.
+ * @param location The [LocationPreview] object representing the details of the location to be displayed.
+ * @param onLocationClick A callback function that gets triggered when the card is clicked. It provides the clicked [LocationPreview] as a parameter.
  */
 @Composable
 fun LocationInfoCard(
-    location: Location,
-    onLocationClick: (Location) -> Unit
+    location: LocationPreview,
+    onLocationClick: (LocationPreview) -> Unit
 ) {
     val context = LocalContext.current
 

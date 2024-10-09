@@ -6,6 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpStatusCode
 import org.mathieu.data.remote.responses.CharacterResponse
+import org.mathieu.data.remote.responses.LocationPreviewResponse
 import org.mathieu.data.remote.responses.PaginatedResponse
 
 internal class CharacterApi(private val client: HttpClient) {
@@ -38,6 +39,18 @@ internal class CharacterApi(private val client: HttpClient) {
      */
     suspend fun getCharacter(id: Int): CharacterResponse? = client
         .get("character/$id")
+        .accept(HttpStatusCode.OK)
+        .body()
+
+    /**
+     * Fetches the details of a location with the given ID from the service.
+     *
+     * @param locationId The unique id of the location to retrieve.
+     * @return The [LocationPreviewResponse] representing the details of the location.
+     * @throws HttpException if the request fails or if the status code is not [HttpStatusCode.OK].
+     */
+    suspend fun getLocation(locationId: Int): LocationPreviewResponse = client
+        .get("location/$locationId")
         .accept(HttpStatusCode.OK)
         .body()
 

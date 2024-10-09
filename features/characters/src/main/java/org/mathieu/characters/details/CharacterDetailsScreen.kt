@@ -17,12 +17,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -42,7 +42,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import org.mathieu.ui.Destination
+import org.mathieu.ui.composables.LocationInfoCard
 import org.mathieu.ui.composables.PreviewContent
+import org.mathieu.ui.navigate
 
 private typealias UIState = CharacterDetailsState
 
@@ -54,11 +59,20 @@ fun CharacterDetailsScreen(
     val viewModel: CharacterDetailsViewModel = viewModel()
     val state by viewModel.state.collectAsState()
 
+    LaunchedEffect(viewModel) {
+        viewModel.events
+            .onEach { event ->
+                if (event is Destination)
+                    navController.navigate(destination = event)
+            }.collect()
+    }
+
     viewModel.init(characterId = id)
 
     CharacterDetailsContent(
         state = state,
-        onClickBack = navController::popBackStack
+        onClickBack = navController::popBackStack,
+        onAction = viewModel::handleAction
     )
 
 }
@@ -68,6 +82,7 @@ fun CharacterDetailsScreen(
 @Composable
 private fun CharacterDetailsContent(
     state: UIState = UIState(),
+    onAction: (CharacterDetailsAction) -> Unit = { },
     onClickBack: () -> Unit = { }
 ) = Scaffold(topBar = {
 
@@ -161,11 +176,15 @@ private fun CharacterDetailsContent(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    if (state.location != null){
+                    if (state.locationPreview != null){
                         LocationInfoCard(
-                            location = state.location,
+                            location = state.locationPreview,
                             onLocationClick = { selectedLocation ->
-                                //TODO: React to click : navigate
+                                onAction(
+                                    CharacterDetailsAction.GoToLocationDetails(
+                                        locationId = selectedLocation.id
+                                    )
+                                )
                             }
                         )
                     }

@@ -2,17 +2,20 @@ package org.mathieu.characters.details
 
 import android.app.Application
 import org.koin.core.component.inject
-import org.mathieu.domain.models.location.Location
+import org.mathieu.domain.models.location.LocationPreview
 import org.mathieu.domain.repositories.CharacterRepository
-import org.mathieu.domain.repositories.LocationRepository
+import org.mathieu.ui.Destination
 import org.mathieu.ui.ViewModel
 
 
-class CharacterDetailsViewModel(application: Application) : org.mathieu.ui.ViewModel<CharacterDetailsState>(
+sealed interface CharacterDetailsAction{
+    data class GoToLocationDetails(val locationId: Int) : CharacterDetailsAction
+}
+
+class CharacterDetailsViewModel(application: Application) : ViewModel<CharacterDetailsState>(
     CharacterDetailsState(), application) {
 
     private val characterRepository: CharacterRepository by inject()
-    private val locationRepository: LocationRepository by inject()
 
     fun init(characterId: Int) {
         fetchData(
@@ -24,12 +27,10 @@ class CharacterDetailsViewModel(application: Application) : org.mathieu.ui.ViewM
                     copy(
                         avatarUrl = character.avatarUrl,
                         name = character.name,
+                        locationPreview = character.locationPreview,
                         error = null
                     )
                 }
-
-                // Fetch location data
-                fetchLocation(character.location.second)
             }
 
             onFailure {
@@ -40,33 +41,23 @@ class CharacterDetailsViewModel(application: Application) : org.mathieu.ui.ViewM
         }
     }
 
-    private fun fetchLocation(locationId: Int) {
-        fetchData(
-            source = { locationRepository.getLocation(locationId) }
-        ) {
-
-            onSuccess { location ->
-                updateState {
-                    copy(
-                        location = location
+    fun handleAction(action: CharacterDetailsAction) {
+        when (action){
+            is CharacterDetailsAction.GoToLocationDetails -> {
+                sendEvent(
+                    Destination.LocationDetails(
+                        locationId = action.locationId.toString()
                     )
-                }
-            }
-
-            onFailure {
-                updateState { copy(error = it.toString()) }
+                )
             }
         }
     }
-
-
 }
-
 
 data class CharacterDetailsState(
     val isLoading: Boolean = true,
     val avatarUrl: String = "",
     val name: String = "",
-    val location: Location? = null,
+    val locationPreview: LocationPreview? = null,
     val error: String? = null
 )

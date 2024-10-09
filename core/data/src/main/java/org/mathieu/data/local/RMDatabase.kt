@@ -5,12 +5,14 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.types.TypedRealmObject
 import org.mathieu.data.local.objects.CharacterObject
+import org.mathieu.data.local.objects.LocationPreviewObject
 import kotlin.reflect.KClass
 
 internal class RMDatabase : RealmDatabase(
     "rick and morty",
     setOf(
-        CharacterObject::class
+        CharacterObject::class,
+        LocationPreviewObject::class
     ),
     1
 )
@@ -35,5 +37,4 @@ open class RealmDatabase(name: String, schema: Set<KClass<out TypedRealmObject>>
     }
 
     suspend fun <R> write(block: MutableRealm.() -> R): R = use { this.write(block) }
-
 }

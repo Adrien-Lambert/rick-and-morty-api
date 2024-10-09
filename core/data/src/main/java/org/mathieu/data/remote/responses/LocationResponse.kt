@@ -2,6 +2,7 @@ package org.mathieu.data.remote.responses
 
 import kotlinx.serialization.Serializable
 import org.mathieu.domain.models.location.Location
+import org.mathieu.domain.models.character.Character
 
 /**
  * Represents detailed information about a location, typically received from an API response.
@@ -25,10 +26,12 @@ internal data class LocationResponse(
     val created: String,
 )
 
-internal fun LocationResponse.toModel(): Location = Location(
-    id = id,
-    name = name,
-    type = type,
-    dimension = dimension,
-    residents = emptyList()
-)
+internal fun LocationResponse.toModel(residents: List<Character>): Location {
+    return Location(
+        id = id,
+        name = name,
+        type = type,
+        dimension = dimension,
+        residents = residents
+    )
+}

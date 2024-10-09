@@ -13,7 +13,8 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
+import io.ktor.serialization.kotlinx.json.json
 
 fun createHttpClient(
     baseUrl: String,
@@ -23,7 +24,11 @@ fun createHttpClient(
 
 
     install(ContentNegotiation) {
-        json()
+        json(Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+            prettyPrint = true
+        })
     }
 
     install(HttpTimeout) {

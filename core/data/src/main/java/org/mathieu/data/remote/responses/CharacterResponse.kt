@@ -1,6 +1,10 @@
 package org.mathieu.data.remote.responses
 
 import kotlinx.serialization.Serializable
+import org.mathieu.data.repositories.tryOrNull
+import org.mathieu.domain.models.character.Character
+import org.mathieu.domain.models.character.CharacterGender
+import org.mathieu.domain.models.character.CharacterStatus
 
 /**
  * Represents detailed information about a character, typically received from an API response.
@@ -32,7 +36,32 @@ internal data class CharacterResponse(
     val episode: List<String>,
     val url: String,
     val created: String,
+    val locationPreview: LocationPreviewResponse? = null
 )
+
+internal fun CharacterResponse.toModel(): Character {
+    return Character(
+        id = id,
+        name = name,
+        status = try {
+            CharacterStatus.valueOf(status)
+        } catch (e: IllegalArgumentException) {
+            CharacterStatus.Unknown
+        },
+        species = species,
+        type = type,
+        gender = try {
+            CharacterGender.valueOf(gender)
+        } catch (e: IllegalArgumentException) {
+            CharacterGender.Unknown
+        },
+        origin = Pair(origin.name, tryOrNull { origin.url.split("/").last().toInt() } ?: -1),
+        location = Pair(location.name, tryOrNull { location.url.split("/").last().toInt() } ?: -1),
+        avatarUrl = image,
+        locationPreview = locationPreview?.toModel()
+    )
+}
+
 
 @Serializable
 internal data class CharacterLocationResponse(val name: String, val url: String)
